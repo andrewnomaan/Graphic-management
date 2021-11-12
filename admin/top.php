@@ -4,7 +4,7 @@
  if(isset($_SESSION['admin_login']) && ($_SESSION['admin_login']!='')){
 }
     else{
-       header("location:login.php");
+       header("location:front.php");
     }
 ?>
 <!doctype html>
@@ -23,6 +23,7 @@
       <link rel="stylesheet" href="assets/css/flag-icon.min.css">
       <link rel="stylesheet" href="assets/css/cs-skin-elastic.css">
       <link rel="stylesheet" href="assets/css/style.css">
+      <link rel="stylesheet" href="assets/css/drop_down.css">
       <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
       <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,15 +42,14 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                <ul class="nav navbar-nav">
                   <li class="menu-title">Menu</li>
-                  <li class="dropdown">
-                     <a href="index.php"> &nbsp;Graphics</a>
-                  </li>
-                  <li class="dropdown">
-                     <a href="categories.php">&nbsp;Graphics category</a>
-                  </li>
-                  <li class="dropdown">
-                     <a href="customers.php">&nbsp;Users</a>
-                  </li>
+                  <button class="dropdown-btn">Graphics
+                    <i class="fa fa-caret-down"></i>
+                     </button>
+                  <div class="dropdown-container">
+                  <a href="index.php">&nbsp;Graphics</a>
+                  <a href="categories.php">&nbsp;Graphics category</a>
+                  <a href="customers.php">&nbsp;Users</a>
+                 </div>
                </ul>
             </div>
          </nav>

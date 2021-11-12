@@ -50,8 +50,10 @@
                                         <!-- Graphics image -->
                                         <img class="float-left" src="img/<?php echo $row['graphic']?>" alt="Card image cap"
                                             width="273.66" height="273.66">
-                                        <a href="?type=delete&id=<?php echo $row['id']?>"
-                                                    class="btn btn-danger mt-4 col-12" onclick="return confirm('Are you sure to delete this')">Delete</a>
+                                        <!-- <a href="?type=delete&id=<?php 
+                                        echo $row['id']
+                                        ?>"
+                                                    class="btn btn-danger mt-4 col-12" onclick="return confirm('Are you sure to delete this')">Delete</a> -->
                                
                             </div>
                         </div>

@@ -32,9 +32,10 @@
                                         <tr>
                                        <td class="serial">'.$i++.'</td>
                                        <td class="serial">'.$row['name'].'</td>
-                                       <td>'.$row['email'].'</td>>
+                                       <td>'.$row['email'].'</td>
                                        <td>';
-                                       echo'&nbsp;<span class="btn btn-secondary"><a href="user_buy.php?id='.$row['id'].'" style="color:white;">Click to see details</a></span>';
+                                       echo'&nbsp;<span class="btn btn-secondary"><a href="user_buy.php?id='.$row['id'].'" style="color:white;">Click to see graphics</a></span>';
+                                       // echo'&nbsp;<span class="btn btn-primary"><a href="user_buy.php?id='.$row['id'].'" style="color:white;">Add graphics</a></span>';
                                       
                                        //
                                       echo' </td>

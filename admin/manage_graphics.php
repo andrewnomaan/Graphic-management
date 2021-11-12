@@ -8,28 +8,15 @@ ob_start();
  $id='';
  $img='';
  $image_required='required';
+ $users="";
  $user_id='';
 
- //For update the graphics detail or edit
- if(isset($_GET['id']) && $_GET['id']!=''){
-   $image_required='';
-   $id=get_safe_value($conn,$_GET['id']);
-   $res=mysqli_query($conn,"select * from graphics where id='$id'");
-   $check=mysqli_num_rows($res);
-   if($check>0){
-   $row=mysqli_fetch_assoc($res);
-   $categories_id=$row['cat_id'];
-   }
-   else{
-      header("Location:index.php");
-      die(); 
-   }
-}
+// For check if we are adding graphics for user
 if(isset($_GET['user_id']) && $_GET['user_id']!=''){
    $user_id=$_GET['user_id'];
 }
 
-//After submiting product detail
+//After submiting graphics detail
  if(isset($_POST['submit'])){
     $categories_id=get_safe_value($conn,$_POST['categories_id']);
     $image=$_FILES['file'];
@@ -38,6 +25,12 @@ if(isset($_GET['user_id']) && $_GET['user_id']!=''){
       $fileext=explode('.',$filename);
       $filecheck=strtolower(end($fileext));
       $filestored=array('png','jpg','jpeg','gif');
+      if(!isset($_GET['user_id'])){
+         $users=get_safe_value($conn,$_POST['users']);
+         if($users==0){
+            $msg="Select user first";
+         }
+      } 
     if($categories_id==0){
        $msg="Select your categories first";
     }
@@ -47,30 +40,23 @@ if(isset($_GET['user_id']) && $_GET['user_id']!=''){
     }   
   } 
     if($msg==''){
-    if(isset($_GET['id']) && $_GET['id']!=''){
-       if($filename!=''){
+     if(isset($_GET['user_id'])){
       $destinationfile='img/'.$filename;
       move_uploaded_file($file_tmp,$destinationfile);
-      $sql=mysqli_query($conn,"update graphics set cat_id='$categories_id',graphic='$filename' where id='$id'");
-    }
-    else{
-      
-      $sql=mysqli_query($conn,"update graphics set cat_id='$categories_id' where id='$id'");
-    }
-   }
-   else if(isset($_GET['user_id'])){
-      $destinationfile='img/'.$filename;
-      move_uploaded_file($file_tmp,$destinationfile);
-    $sql=mysqli_query($conn,"insert into graphics(cat_id,graphic) values('$categories_id','$filename')");
+    $sql=mysqli_query($conn,"insert into graphics(cat_id,graphic,user_id) values('$categories_id','$filename','$user_id')");
     $graphics_id=mysqli_insert_id($conn);
     $sql2=mysqli_query($conn,"insert into buy_graphics(user_id,graphics_id) values('$user_id','$graphics_id')");
-    header("Location:customers.php");
+    ?>
+    <script>
+       history.go(-2);
+    </script>
+    <?php
     die(); 
    }
     else{
       $destinationfile='img/'.$filename;
       move_uploaded_file($file_tmp,$destinationfile);
-    $sql=mysqli_query($conn,"insert into graphics(cat_id,graphic) values('$categories_id','$filename')");
+    $sql=mysqli_query($conn,"insert into graphics(cat_id,graphic,user_id) values('$categories_id','$filename','$users')");
      
     }
     header("Location:index.php");
@@ -89,7 +75,7 @@ if(isset($_GET['user_id']) && $_GET['user_id']!=''){
                   <div class="col-lg-12">
                      <div class="card">
                         <div class="card-header"><strong>
-                           Add Product</strong></div>
+                           Add Graphics</strong></div>
                         <div class="card-body card-block">
                            <form action="" method="post" enctype="multipart/form-data">
                            <div class="form-group">
@@ -115,6 +101,25 @@ if(isset($_GET['user_id']) && $_GET['user_id']!=''){
                                <label for="categories" class=" form-control-label">Graphics</label>
                            <input type="file" id="img" name="file" class="form-control" <?php echo $image_required ?>>
                         </div>
+                        <?php
+                          if(!isset($_GET['user_id'])){
+                        ?>
+                        <div class="form-group">
+                               <label for="categories" class=" form-control-label">Users</label>
+                               <select name="users" class="form-control">
+                               <option>Select Users</option>
+                                <?php
+                                //For showing categories in product details form
+                                $res=mysqli_query($conn,"select * from users");
+                                   while($row=mysqli_fetch_assoc($res)){
+                                       echo "<option value=".$row['id'].">".$row['name']."</option>";
+                                   }
+                                ?>
+                           </select>
+                        </div>
+                        <?php
+                          }
+                        ?>
                          
                          
                            <button id="cat-button" type="submit" class="btn btn-lg btn-info btn-block" name="submit">

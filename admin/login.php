@@ -2,21 +2,65 @@
  require('db_connect.php');
  require('function.php');
  $msg='';
+ $admin="";
+ function login($email,$password,$role,$conn){
+   $sql="SELECT * FROM admin where email='$email' AND password='$password' AND role=$role";
+   $res=mysqli_query($conn,$sql);
+   if(mysqli_num_rows($res)>0){
+      return 1;
+   }
+   else{
+      return 0;
+   }
+ }
+ if(isset($_GET['admin']) && $_GET['admin']!=''){
+    $admin=get_safe_value($conn,$_GET['admin']);
  if(isset($_POST['submit'])){
-    echo $username=get_safe_value($conn,$_POST['username']);
-    echo $password=get_safe_value($conn,$_POST['password']);
-    $sql="SELECT * FROM admin where email='$username' AND password='$password'";
-    $res=mysqli_query($conn,$sql);
-    if(mysqli_num_rows($res)>0){
+    $username=get_safe_value($conn,$_POST['username']);
+    $password=get_safe_value($conn,$_POST['password']);
+    if($admin=='superadmin'){
+     if(login($username,$password,1,$conn)!=0){
        $_SESSION['admin_login']='yes';
        $_SESSION['admin_username']=$username;
        header("Location:index.php");
        die();
     }
     else{
-       $msg="Please enter correct login details.";
+      $msg="Please enter correct login details.";
+   }
+   }
+    else if($admin=='graphic'){
+      if(login($username,$password,2,$conn)!=0){
+         $_SESSION['admin_login']='yes';
+         $_SESSION['admin_username']=$username;
+         header("Location:index.php");
+         die();
+      }
+      else{
+        $msg="Please enter correct login details.";
+     }
     }
+    else if($admin=='assistant'){
+      if(login($username,$password,3,$conn)!=0){
+         $_SESSION['admin_login']='yes';
+         $_SESSION['admin_username']=$username;
+         header("Location:index.php");
+         die();
+      }
+      else{
+        $msg="Please enter correct login details.";
+     }
+    }
+    
  }
+}
+else{
+   ?>
+    <script>
+       window.location="front.php";
+    </script>
+   <?php
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="">
